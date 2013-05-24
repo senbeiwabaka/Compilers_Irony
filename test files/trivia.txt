@@ -1,0 +1,47 @@
+title trivia by x. shen modified t. o'neil 11.14.2011
+var
+   int a
+   int b
+   int c
+   int s
+begin
+   prompt "Please input an integer number: "
+   input a
+   let b = 50
+   let c = 500
+   let s = 0
+   let s = s / (c / c)
+   let s = s + c + c
+   let s = s / (c / a)
+   let c = b + c
+   let s = s + b + a
+   let s = s + b + a
+   let s = s + b + c
+   let s = s + a + b
+   let s = s / (a / a)
+   let c = b / a
+   let s = s / (b / a)
+   let s = s + c + b
+   let s = s + a + b
+   let s = s + c + a
+   let s = s + c + c
+   let s = s + c + b
+   let c = b + a
+   let s = s / (c / b)
+   let b = c + a
+   let s = s / (b / a)
+   let s = s + a + b
+   let s = s + c + b
+   let s = s + c + a
+   let c = a + a
+   let s = s + a + c
+   let c = b + a
+   let s = s + a + a
+   let c = b / a
+   let c = b / c
+   let a = a / c
+   let s = s + b + a
+   prompt "Final Result: s = "
+   print s
+   prompt "\n"
+end

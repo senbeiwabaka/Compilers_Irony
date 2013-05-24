@@ -1,0 +1,44 @@
+title mandelbrot by x. shen modified t. o'neil 11.11.2011
+var
+   int x
+   int y
+   int on
+   int real
+   int imag
+   int temp
+   int iter
+   int absreal
+   int absimag
+begin
+   let y = 950
+   while (y > -950)
+      let x = -2100
+      while (x < 1000)
+         let on = 0
+         rem check pixel
+         let real = 0
+         let imag = 0
+         let temp = 0
+         let iter = 0
+         while (iter < 255)
+            let temp = (real * real + 500) / 1000 - (imag * imag + 500) / 1000 + x
+            let imag = ((2 * real * imag + 500) / 1000) + y
+            let real = temp
+            let absreal = real
+            if (real < 0) then let absreal = -1 * real
+            let absimag = imag
+            if (imag < 0) then let absimag = -1 * imag
+            if (absreal + absimag > 5000) then goto bail
+            let iter = iter + 1
+         endwhile
+         let on = 1
+         rem end check pixel
+         label bail
+         if (on == 1) then prompt "X"
+         if (on == 0) then prompt " "
+         let x = x + 40
+      endwhile
+      prompt "\n"
+      let y = y - 50
+   endwhile
+end

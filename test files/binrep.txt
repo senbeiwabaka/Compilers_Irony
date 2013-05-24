@@ -1,0 +1,36 @@
+title "help" 
+var
+   int a
+   int i
+   int p
+   list[16] bit
+begin
+   let a = 0
+   while (a <= 0)
+      prompt "Give me a number "
+      input a
+      if (a <= 0) then prompt "I need a positive integer.\n"
+   endwhile
+   prompt "The binary representation of "
+   print a
+   prompt " is "
+   if (a != 0) then goto calc
+   print a
+   goto finish
+
+   label calc
+   let p = 0
+   while (a > 0)
+      rem bit[p] = a % 2
+      let p = p + 1
+      let a = a / 2
+   endwhile
+
+   let p = p - 1
+   for i = 0 to p
+      print bit[p - i]
+   endfor
+
+   label finish
+   prompt "\n\n"
+end

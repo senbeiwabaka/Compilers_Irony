@@ -1,0 +1,183 @@
+title sort by x. shen modified t. o'neil 11.14.2011
+var
+   int bound
+   int idx
+   int temp
+   list[16] array_1
+   list[16] array_2
+   list[16] array_3
+   list[16] array_4
+begin
+   let bound = 16
+   rem populate arrays
+   let array_1[0] = 0
+   let array_2[0] = 15
+   let array_3[0] = 5
+   let array_4[0] = 13
+   let array_1[1] = 1
+   let array_2[1] = 14
+   let array_3[1] = 5
+   let array_4[1] = 9
+   let array_1[2] = 2
+   let array_2[2] = 13
+   let array_3[2] = 5
+   let array_4[2] = 12
+   let array_1[3] = 3
+   let array_2[3] = 12
+   let array_3[3] = 5
+   let array_4[3] = 1
+   let array_1[4] = 4
+   let array_2[4] = 11
+   let array_3[4] = 5
+   let array_4[4] = 0
+   let array_1[5] = 5
+   let array_2[5] = 10
+   let array_3[5] = 5
+   let array_4[5] = 14
+   let array_1[6] = 6
+   let array_2[6] = 9
+   let array_3[6] = 5
+   let array_4[6] = 3
+   let array_1[7] = 7
+   let array_2[7] = 8
+   let array_3[7] = 5
+   let array_4[7] = 2
+   let array_1[8] = 8
+   let array_2[8] = 7
+   let array_3[8] = 5
+   let array_4[8] = 11
+   let array_1[9] = 9
+   let array_2[9] = 6
+   let array_3[9] = 5
+   let array_4[9] = 8
+   let array_1[10] = 10
+   let array_2[10] = 5
+   let array_3[10] = 5
+   let array_4[10] = 6
+   let array_1[11] = 11
+   let array_2[11] = 4
+   let array_3[11] = 5
+   let array_4[11] = 4
+   let array_1[12] = 12
+   let array_2[12] = 3
+   let array_3[12] = 5
+   let array_4[12] = 5
+   let array_1[13] = 13
+   let array_2[13] = 2
+   let array_3[13] = 5
+   let array_4[13] = 10
+   let array_1[14] = 14
+   let array_2[14] = 1
+   let array_3[14] = 5
+   let array_4[14] = 7
+   let array_1[15] = 15
+   let array_2[15] = 0
+   let array_3[15] = 5
+   let array_4[15] = 15
+   rem end populate arrays
+   rem print arrays
+   let bound = 16
+   prompt "Array_1:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_1[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "Array_2:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_2[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "Array_3:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_3[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "Array_4:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_4[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "\n"
+   rem end print arrays
+   let bound = 16
+   let idx = 0
+   while (idx < bound - 1)
+      if (array_1[idx] <= array_1[idx + 1]) then goto fi1
+      let temp = array_1[idx]
+      let array_1[idx] = array_1[idx + 1]
+      let array_1[idx + 1] = temp
+      let idx = 0
+      goto continue1
+      label fi1
+      let idx = idx + 1
+      label continue1
+   endwhile
+   let idx = 0
+   while (idx < bound - 1)
+      if (array_2[idx] <= array_2[idx + 1]) then goto fi2
+      let temp = array_2[idx]
+      let array_2[idx] = array_2[idx + 1]
+      let array_2[idx + 1] = temp
+      let idx = 0
+      goto continue2
+      label fi2
+      let idx = idx + 1
+      label continue2
+   endwhile
+   let idx = 0
+   while (idx < bound - 1)
+      if (array_3[idx] <= array_3[idx + 1]) then goto fi3
+      let temp = array_3[idx]
+      let array_3[idx] = array_3[idx + 1]
+      let array_3[idx + 1] = temp
+      let idx = 0
+      goto continue3
+      label fi3
+      let idx = idx + 1
+      label continue3
+   endwhile
+   let idx = 0
+   while (idx < bound - 1)
+      if (array_4[idx] <= array_4[idx + 1]) then goto fi4
+      let temp = array_4[idx]
+      let array_4[idx] = array_4[idx + 1]
+      let array_4[idx + 1] = temp
+      let idx = 0
+      goto continue4
+      label fi4
+      let idx = idx + 1
+      label continue4
+   endwhile
+   rem print arrays
+   let bound = 16
+   prompt "Array_1:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_1[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "Array_2:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_2[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "Array_3:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_3[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "Array_4:\n"
+   let idx = 0
+   while (idx < bound)
+      print array_4[idx]
+      let idx = idx + 1
+   endwhile
+   prompt "\n"
+   rem end print arrays
+end

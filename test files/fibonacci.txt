@@ -1,0 +1,28 @@
+title "fibonacci by t. oneil, 10.26.2011"
+var
+	list[32] array
+	int idx
+	int bound
+begin
+	let bound = 32
+	rem initialize array
+	for idx = 0 to (bound - 1)
+		let array[idx] = -1
+	endfor
+	let array[0] = 1
+	let array[1] = 1
+	rem end initialize array
+	let idx = 0
+	prompt "The first few digits of the Fibonacci sequence are:\n"
+	while (idx < bound)
+		rem fibonacci calculation
+		rem first one idx - 1 second one idx - 2
+		if (array[idx] == -1) then
+			let array[idx] = array[idx] + array[idx]
+		rem end fibonacci calculation
+		print array[idx]
+		prompt " "
+		let idx = idx + 1
+	endwhile
+	prompt "\n"
+end

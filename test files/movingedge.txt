@@ -1,0 +1,60 @@
+title moving edge by x. shen modified t. o'neil 11.12.2011
+var
+   list[5] nbr_5
+   list[100] V
+   int i
+   int j
+   int magic
+   int seed
+   int size
+   int temp
+begin
+   prompt "Please input a non-zero random number generator seed: "
+   let seed = -1
+   while (seed < 0)
+      input seed
+      if (seed >= 0) then goto break1
+      prompt "I need a non-zero number: "
+      let seed = -1
+   endwhile
+   label break1
+   prompt "Please input the size of the vector to be transformed: "
+   let size = -1
+   while (size < 0)
+      input size
+      if (size >= 0) then
+         if (size <= 100) then goto break2
+      prompt "I need a non-negative number less than 100: "
+      let size = -1
+   endwhile
+   label break2
+   for i = 0 to size - 1
+      let seed = (65 * seed) % 1021
+      let V[i] = seed
+   endfor
+   prompt "Original vector:\n"
+   for i = 0 to size - 1
+      print V[i]
+      prompt "\n"
+   endfor
+   prompt "\n"
+   let magic = 35
+   let nbr_5[0] = -3
+   let nbr_5[1] = 12
+   let nbr_5[2] = 17
+   let nbr_5[3] = 12
+   let nbr_5[4] = -3
+   for i = 2 to size - 3
+      let temp = 0
+      for j = -2 to 2
+         let temp = temp + V[i + j] * nbr_5[j + 2]
+      endfor
+      let V[i] = temp / magic
+   endfor
+   prompt "Moving edge vector:\n"
+   for i = 0 to size - 1
+      print V[i]
+      prompt "\n"
+   endfor
+   prompt "\n"
+end

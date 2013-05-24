@@ -1,0 +1,67 @@
+title insertion sort by x. shen modified t. o'neil 11.14.2011
+var
+   int i
+   int j
+   int t
+   int maxnum
+   int seed
+   int lb
+   int ub
+   list[30] data
+   int temp
+   int done
+begin
+   let done = 0
+   prompt "Please input a non-zero random number generator seed: "
+   let seed = -1
+   while (seed < 0)
+      input seed
+      if (seed >= 0) then goto break1
+      prompt "I need a non-zero number: "
+      let seed = -1
+   endwhile
+   label break1
+   let maxnum = 30
+   let lb = 0
+   let ub = maxnum - 1
+   rem fill
+   for i = lb to ub
+      let seed = (65 * seed) % 1021
+      let data[i] = seed
+   endfor
+   rem end fill
+   rem insert sort
+   for i = lb + 1 to ub
+      let t = data[i]
+      let j = i - 1
+      while (j >= lb)
+	 let temp = 0
+         if (data[j] > t) then goto swap
+
+	 label cont
+         let j = j - 1
+      endwhile
+      rem let data[j + 1] = t
+   endfor
+
+   let done = 1
+
+   if (done == 1) then goto pr
+
+   label swap
+   let temp = data[j + 1]
+   let data[j + 1] = data[j]
+   let data[j] = temp
+   goto cont
+
+   rem end insert sort
+
+   label pr
+   prompt "results:\n"
+   for i = lb to ub
+      print i
+      prompt ": "
+      print data[i]
+      prompt "\n"
+   endfor
+end

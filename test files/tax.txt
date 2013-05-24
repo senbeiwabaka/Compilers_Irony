@@ -1,0 +1,175 @@
+title "tax by x. shen modified t. o'neil 11.14.2011"
+var
+   int line1
+   int line2
+   int line3
+   int line4
+   int line5
+   int line6
+   int line7
+   int line8
+   int deadline11
+   int deadline12
+   int line10
+   int dependant
+   int single
+   int b
+   int c
+   int d
+   int e
+   int f
+   int g
+   int eic
+   int spousedependant
+begin
+   let line4 = 0
+   let line5 = 0
+   let d = 0
+   let e = 0
+   prompt "Welcome to the United States 1040 federal income tax program.\n"
+   prompt "(Note: this isn't the real 1040 form. If you try to submit your\n"
+   prompt "taxes this way, you'll get what you deserve!\n\n"
+   prompt "Answer the following questions to determine what you owe.\n\n"
+   prompt "Total wages, salary, and tips? "
+   let line1 = -1
+   while (line1 < 0)
+      input line1
+      if (line1 < 0) then prompt "I need a non-negative number: "
+   endwhile
+   prompt "Taxable interest (such as from bank accounts)? "
+   let line2 = -1
+   while (line2 < 0)
+      input line2
+      if (line2 < 0) then prompt "I need a non-negative number: "
+   endwhile
+   prompt "Unemployment compensation, qualified state tuition, and Alaska\n"
+   prompt "Permanent Fund dividends? "
+   let line3 = -1
+   while (line3 < 0)
+      input line3
+      if (line3 < 0) then prompt "I need a non-negative number: "
+   endwhile
+   let line4 = line1 + line2 + line3
+   prompt "Your adjusted gross income is: "
+   print line4
+   prompt "\n"
+   prompt "Enter <1> if your parents or someone else can claim you on their"
+   prompt " return. \nEnter <0> otherwise: "
+   let dependant = -1
+   while (dependant < 0)
+      input dependant
+      if (dependant < 0) then prompt "I need a non-negative number: "
+   endwhile
+   if (dependant == 0) then goto depz
+   let b = 700
+   let c = b
+   if (c < line1 + 250) then let c = line1 + 250
+   prompt "Enter <1> if you are single, <0> if you are married: "
+   let single = -1
+   while (single < 0)
+      input single
+      if (single < 0) then prompt "I need a non-negative number: "
+   endwhile
+   if (single != 0) then let line5 = 7350
+   if (single == 0) then let line5 = 7350
+   let e = c
+   if (e > d) then let e = d
+   let f = 0
+   if (single != 0) then goto unmarried
+   prompt "Enter <1> if your spouse can be claimed as a dependant, "
+   prompt "enter <0> if not: "
+   let spousedependant = -1
+   while (spousedependant < 0)
+      input spousedependant 
+      if (spousedependant < 0) then prompt "I need a non-negative number: "
+   endwhile
+   if (spousedependant == 0) then let f = 2800
+   label unmarried
+   let g = e + f
+   let line5 = g
+   goto depnz
+   label depz
+   prompt "Enter <1> if you are single, <0> if you are married: "
+   let single = -1
+   while (single < 0)
+      input single
+      if (single < 0) then prompt "I need a non-negative number: "
+   endwhile
+   if (single != 0) then let line5 = 12950
+   if (single == 0) then let line5 = 7200
+   label depnz
+   let line6 = line4 - line5
+   if (line6 < 0) then let line6 = 0
+   prompt "Your taxable income is: "
+   print line6
+   prompt "\n"
+   prompt "Enter the amount of Federal income tax withheld: "
+   let line7 = -1
+   while (line7 < 0)
+      input line7
+      if (line7 < 0) then prompt "I need a non-negative number: "
+   endwhile
+   prompt "Enter <1> if you get an earned income credit (EIC); "
+   prompt "enter 0 otherwise: "
+   let eic = -1
+   while (eic < 0)
+      input eic
+      if (eic < 0) then prompt "I need a non-negative number: "
+   endwhile
+   let line8 = 0
+   if (eic == 0) then goto noeic
+   prompt "OK, I'll give you a thousand dollars for your credit.\n"
+   let line8 = 1000
+   label noeic
+   prompt "Your total tax payments amount to: "
+   print (line8 + line7)
+   prompt "\n"
+   let line10 = (line6 * 28 + 50) / 100
+   prompt "Your total tax liability is: "
+   print line10
+   prompt "\n"
+   if (line8 + line7 - line10 < 0) then goto line11neg
+   let deadline11 = 0
+   goto line11pos
+   label line11neg
+   let deadline11 = 0
+   label line11pos
+   if (line8 + line7 - line10 <= 0) then goto norefund
+   prompt "Congratulations, you get a tax refund of $"
+   print (line8 + line7 - line10)
+   prompt "\n"
+   label norefund
+   if (line10 - line8 - line7 <= 0) then goto refund
+   prompt "Bummer. You owe the IRS a check for $"
+   print (line10 - line8 - line7)
+   prompt "\n"
+   label refund
+   if (line10 - line8 - line7 < 0) then goto line12neg
+   let deadline12 = 0
+   goto line12pos
+   label line12neg
+   let deadline12 = 0
+   label line12pos
+   print line6
+   prompt "\n"
+   print (line8 + line7)
+   prompt "\n"
+   print line10
+   prompt "\n"
+   print b
+   prompt "\n"
+   print e
+   prompt "\n"
+   print d
+   prompt "\n"
+   print deadline11
+   prompt "\n"
+   print deadline12
+   prompt "\n"
+   let line6 = line10
+   let line8 = 0
+   let line10 = 0
+   let deadline11 = b + deadline12
+   let deadline12 = e + d
+   prompt "Thank you for using ez-tax.\n"
+end

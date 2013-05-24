@@ -1,0 +1,74 @@
+title "automaton by x.shen modified t. o'neil 11.11.2011"
+var
+   int n
+begin
+   label state0
+   while (0 == 0)
+      prompt "Give me a number (-1 to quit): "
+      input n
+      if (n >= -1) then
+         if (n <= 1) then goto break0
+      prompt "I need a number thats either zero or one.\n"
+   endwhile
+   label break0
+   if (n == 0) then goto state2
+   if (n == 1) then goto state1
+   if (n != -1) then goto finish
+   prompt "You gave me an even number of 0's.\n"
+   prompt "You gave me an even number of 1's.\n"
+   prompt "I therefore accept this input.\n"
+   goto finish
+
+   label state1
+   while (0 == 0)
+      prompt "Give me a number (-1 to quit): "
+      input n
+      if (n >= -1) then
+         if (n <= 1) then goto break1
+      prompt "I need a number thats either zero or one.\n"
+   endwhile
+   label break1
+   if (n == 0) then goto state3
+   if (n == 1) then goto state0
+   if (n != -1) then goto finish
+   prompt "You gave me an even number of 0's.\n"
+   prompt "You gave me an odd number of 1's.\n"
+   prompt "I therefore reject this input.\n"
+   goto finish
+
+   label state2
+   while (0 == 0)
+      prompt "Give me a number (-1 to quit): "
+      input n
+      if (n >= -1) then
+         if (n <= 1) then goto break2
+      prompt "I need a number thats either zero or one.\n"
+   endwhile
+   label break2
+   if (n == 0) then goto state0
+   if (n == 1) then goto state3
+   if (n != -1) then goto finish
+   prompt "You gave me an odd number of 0's.\n"
+   prompt "You gave me an even number of 1's.\n"
+   prompt "I therefore reject this input.\n"
+   goto finish
+
+   label state3
+   while (0 == 0)
+      prompt "Give me a number (-1 to quit): "
+      input n
+      if (n >= -1) then
+         if (n <= 1) then goto break3
+      prompt "I need a number thats either zero or one.\n"
+   endwhile
+   label break3
+   if (n == 0) then goto state1
+   if (n == 1) then goto state2
+   if (n != -1) then goto finish
+   prompt "You gave me an odd number of 0's.\n"
+   prompt "You gave me an odd number of 1's.\n"
+   prompt "I therefore reject this input.\n"
+
+   label finish
+   prompt "Thats all folks.\n"
+end

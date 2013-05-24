@@ -1,0 +1,30 @@
+title jacobi by x. shen modified t. o'neil 11.11.2011
+var
+   table[512, 512] a
+   table[512, 512] b
+   int i
+   int j
+begin
+   for i = 0 to 511
+      for j = 0 to 511
+         let a[j, i] = 12 + i + j
+         let b[j, i] = 12 + i + j
+      endfor
+   endfor
+
+   for i = 0 to 510
+      for j = 0 to 510
+         let a[i, j] = (b[i - 1, j] + b[i + 1, j] + b[i, j - 1] + b[i, j + 1]) / 4
+      endfor
+   endfor
+
+   for i = 0 to 510
+      for j = 0 to 510
+         let b[i, j] = a[i, j]
+      endfor
+   endfor
+
+   prompt "The sampled element is "
+   print b[256, 256]
+   prompt "\n"
+end
