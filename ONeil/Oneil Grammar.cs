@@ -2,7 +2,7 @@
 using Irony.Parsing;
 using Irony.Interpreter.Ast;
 
-namespace irony_test
+namespace ONeil
 {
     [Language("O'Neil", "1.0", "O'Neil Language for Compilers")]
     public class OneilGrammar : Grammar
@@ -62,19 +62,20 @@ namespace irony_test
             programLine.Rule = title + v + varDecList + begin + stmtList + end;
             // VarDecList line that accepts their built in Empty element
             v.Rule = ToTerm("var") + NewLine;
-            varDecList.Rule = MakeStarRule(varDecList, NewLine, varDecl);
-            varDecTail.Rule = Empty | varDecl + varDecTail;
-            varDecl.Rule = ToTerm("int") + id + NewLine | ToTerm("list") + "[" + digitList + "]" + id + NewLine;
+            varDecList.Rule = MakeStarRule(varDecList, varDecl);
+            //varDecTail.Rule = Empty | varDecl + varDecTail;
+            varDecl.Rule = ToTerm("int") + identifier + NewLine | ToTerm("list") + "[" + digit + "]" + identifier + NewLine |
+                ToTerm("table") + "[" + digit + "," + digit + "]" + identifier + NewLine;
             // MakeStarRule is zero or more elements <-- takes care of recursion
             stmtList.Rule = MakeStarRule(stmtList, NewLine, stmt);
             stmt.Rule = ToTerm("rem") + text |
                 ToTerm("label") + identifier |
-                "let" + id + "=" + expr |
-                "let" + id + "[" + expr + "] =" + expr |
+                "let" + identifier + "=" + expr |
+                "let" + identifier + "[" + expr + "]" + "=" + expr |
                 ifStmt |
-                "goto" + id |
-                "input" + id |
-                "input [" + id + "]" |
+                "goto" + identifier |
+                "input" + identifier |
+                "input [" + identifier + "]" |
                 "print" + expr |
                 ToTerm("prompt") + text |
                 whileStmt |
@@ -82,35 +83,39 @@ namespace irony_test
                 Empty;
             whileStmt.Rule = ToTerm("while") + "(" + expr + relOp + expr + ")" + NewLine + stmtList + "endwhile";// + NewLine;
             //endWhile.Rule = ToTerm("endwhile");
-            ifStmt.Rule = ToTerm("if") + "(" + expr + relOp + expr + ")" + "then" + stmt |
-                ToTerm("if") + "(" + expr + relOp + expr + ")" + "then" + NewLine;
-            forStmt.Rule = ToTerm("for") + id + "=" + factor + "to" + factor + NewLine + stmtList + endFor |
-                ToTerm("for") + id + "=" + factor + "to" + "(" + factor + ")" + NewLine + stmtList + endFor;// this is because of "size - 1"
+            ifStmt.Rule = ToTerm("if") + "(" + expr + relOp + expr + ")" + "then" + stmt;
+                //ToTerm("if") + "(" + expr + relOp + expr + ")" + "then" + Empty;
+            forStmt.Rule = ToTerm("for") + identifier + "=" + factor + "to" + expr + NewLine + stmtList + endFor;
+                //ToTerm("for") + identifier + "=" + factor + "to" + "(" + factor + ")" + NewLine + stmtList + endFor;// this is because of "size - 1"
             endFor.Rule = ToTerm("endfor");
+            
             expr.Rule = term + exprTail;
             exprTail.Rule = Empty | addOp + term + exprTail;
             term.Rule = factor + termTail;
             termTail.Rule = Empty | mulOp + factor + termTail;
-            factor.Rule = id | id + "[" + expr + "]" | number | "(" + expr + ")";
+            factor.Rule = identifier | identifier + "[" + expr + "]" | digit | "(" + expr + ")";
             relOp.Rule = ToTerm("<") | "==" | ">" | "<=" | ">=" | "!=";
             addOp.Rule = ToTerm("+") | "-";
             mulOp.Rule = ToTerm("*") | "/" | "%";
             // Use identifier to replace letter
-            id.Rule = identifier + idList;
-            idList.Rule = Empty | identifier + idList | digit + idList;
-            number.Rule = digit + digitList | ToTerm("-") + digit + digitList;
+            //id.Rule = identifier + idList;
+            //idList.Rule = Empty | identifier + idList | digit + idList;
+            //number.Rule = digit + digitList | ToTerm("-") + digit + digitList;
             // Zero or more
-            digitList.Rule = MakeStarRule(digitList, digit);
+            //digitList.Rule = MakeStarRule(digitList, digit);
             program.Rule = MakePlusRule(program, null, programLine);
-            // This signifys that this language uses Newline as line enders
+            // This signifies that this language uses Newline as line enders
             this.UsesNewLine = true;
             // I think this is for syntax checker and highlighter
-            //this.MarkReservedWords("title", "rem", "var", "begin", "end", "endfor", "while", "endwhile", "prompt", "label");
+            this.MarkReservedWords("rem", "var", "begin", "end", "endfor", "while", "endwhile", "prompt", "label");
+            
             // This prunes the tree.
-            //this.MarkPunctuation("[", "]", "(", ")",Environment.NewLine);
-            //RegisterBracePair("(", ")");
-            //RegisterBracePair("[", "]");
-            //this.MarkTransient(begin, end, v, endWhile, title, endFor);
+            this.MarkPunctuation("[", "]", "(", ")", Environment.NewLine);
+            this.MarkPunctuation(end, begin);
+            RegisterBracePair("(", ")");
+            RegisterBracePair("[", "]");
+            
+            this.MarkTransient(begin, end, v, endWhile, endFor);
             this.Root = program;
 
             //this.LanguageFlags = LanguageFlags.CreateAst | LanguageFlags.NewLineBeforeEOF;
