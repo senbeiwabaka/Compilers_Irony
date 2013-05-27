@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSharpCode.cs" />
+    <Compile Include="CSharpGeneration.cs" />
     <Compile Include="Oneil Grammar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
