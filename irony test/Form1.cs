@@ -3,8 +3,10 @@ using System.IO;
 using System.Windows.Forms;
 using Irony.Ast;
 using Irony.Parsing;
+using System.CodeDom.Compiler;
+using ONeil;
 
-namespace irony_test
+namespace ONeil
 {
     public partial class Form1 : Form
     {
@@ -13,6 +15,8 @@ namespace irony_test
         private Parser _parser;
         private OneilGrammar _ONeilGrammar = new OneilGrammar();
         private ParseTree _parseTree;
+        Form newForm;
+        private CompilerResults results;
 
         public Form1()
         {
@@ -97,6 +101,7 @@ namespace irony_test
             ShowParseTree();
             
             ShowAstTree();
+            
         }
 
         private void ShowParseTree()
@@ -142,6 +147,83 @@ namespace irony_test
             var childList = iBrowsable.GetChildNodes();
             foreach (var child in childList)
                 AddAstNodeRec(newNode, child);
+        }
+
+        private void addClassToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            newForm = new Form();
+            newForm.Size = new System.Drawing.Size(400, 400);
+            newForm.Show(this);
+            var tb = new TextBox();
+            tb.Multiline = true;
+            tb.Size = new System.Drawing.Size(380, 300);
+            tb.Location = new System.Drawing.Point(1, 1);
+            tb.ScrollBars = ScrollBars.Vertical;
+            newForm.Controls.Add(tb);
+            var btn = new Button();
+            btn.Size = new System.Drawing.Size(75, 23);
+            btn.Location = new System.Drawing.Point(250, 325);
+            btn.Text = "Submit Class";
+            btn.Click += btn_Click;
+            newForm.Controls.Add(btn);
+            newForm.Resize += newForm_Resize;
+        }
+
+        void btn_Click(object sender, EventArgs e)
+        {
+            var codeProvider = CodeDomProvider.CreateProvider("CSharp");
+
+            //generate exe not dll
+            var par = new CompilerParameters
+            {
+                GenerateExecutable = false,
+                GenerateInMemory = true,
+                CompilerOptions = "/platform:x86 /optimize",
+            };
+
+            txtErrors.Clear();
+            txtErrors.Text = newForm.Controls[0].Text;
+
+            txtErrors.Clear();
+            var errors = codeProvider.CompileAssemblyFromSource(par, newForm.Controls[0].Text);
+            foreach (CompilerError item in errors.Errors)
+            {
+                txtErrors.Text += "line number " + item.Line + ", error num" + item.ErrorNumber +
+                                     " , " + item.ErrorText + Environment.NewLine + Environment.NewLine;
+            }
+
+            if (errors.Errors.Count == 0)
+            {
+                var cde = errors.CompiledAssembly.GetType("myclass", false, true);
+                if (cde != null)
+                {
+                    var mt = cde.GetMethod("Run");
+                    var r = 2;
+                    object[] param = new object[] { 1, r };
+                    mt.Invoke(null, param);
+
+                    txtErrors.Clear();
+                    txtErrors.Text = param.GetValue(1).ToString();
+                }
+            }
+
+        }
+
+        void newForm_Resize(object sender, EventArgs e)
+        {
+            txtErrors.Text += newForm.Size.ToString() + Environment.NewLine;
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void generatorCCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var csc = new CSharpCode(_parseTree);
+            csc.GenerateCode();
+            txtCSharpCode.Lines = csc.CSCode;
         }
     }
 }
