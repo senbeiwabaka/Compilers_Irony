@@ -37,10 +37,10 @@ namespace ONeil
             var relOp = new NonTerminal("relOp");
             var addOp = new NonTerminal("addOp");
             var mulOp = new NonTerminal("mulOp");
-            var id = new NonTerminal("id");
-            var idList = new NonTerminal("idList");
-            var number = new NonTerminal("number");
-            var digitList = new NonTerminal("digList");
+            //var id = new NonTerminal("id");
+            //var idList = new NonTerminal("idList");
+            //var number = new NonTerminal("number");
+            //var digitList = new NonTerminal("digList");
             // title and begin are used for easy statement
             var title = new NonTerminal("title");
             var begin = new NonTerminal("begin");
@@ -81,14 +81,11 @@ namespace ONeil
                 whileStmt |
                 forStmt |
                 Empty;
-            whileStmt.Rule = ToTerm("while") + "(" + expr + relOp + expr + ")" + NewLine + stmtList + "endwhile";// + NewLine;
-            //endWhile.Rule = ToTerm("endwhile");
+            whileStmt.Rule = ToTerm("while") + "(" + expr + relOp + expr + ")" + NewLine + stmtList + endWhile;// + NewLine;
+            endWhile.Rule = ToTerm("endwhile");
             ifStmt.Rule = ToTerm("if") + "(" + expr + relOp + expr + ")" + "then" + stmt;
-                //ToTerm("if") + "(" + expr + relOp + expr + ")" + "then" + Empty;
-            forStmt.Rule = ToTerm("for") + identifier + "=" + factor + "to" + expr + NewLine + stmtList + endFor;
-                //ToTerm("for") + identifier + "=" + factor + "to" + "(" + factor + ")" + NewLine + stmtList + endFor;// this is because of "size - 1"
+            forStmt.Rule = ToTerm("for") + identifier + "=" + expr + "to" + expr + NewLine + stmtList + endFor;
             endFor.Rule = ToTerm("endfor");
-            
             expr.Rule = term + exprTail;
             exprTail.Rule = Empty | addOp + term + exprTail;
             term.Rule = factor + termTail;
@@ -97,28 +94,45 @@ namespace ONeil
             relOp.Rule = ToTerm("<") | "==" | ">" | "<=" | ">=" | "!=";
             addOp.Rule = ToTerm("+") | "-";
             mulOp.Rule = ToTerm("*") | "/" | "%";
-            // Use identifier to replace letter
-            //id.Rule = identifier + idList;
-            //idList.Rule = Empty | identifier + idList | digit + idList;
-            //number.Rule = digit + digitList | ToTerm("-") + digit + digitList;
-            // Zero or more
-            //digitList.Rule = MakeStarRule(digitList, digit);
             program.Rule = MakePlusRule(program, null, programLine);
+            this.Root = program;
+
             // This signifies that this language uses Newline as line enders
             this.UsesNewLine = true;
+
             // I think this is for syntax checker and highlighter
             this.MarkReservedWords("rem", "var", "begin", "end", "endfor", "while", "endwhile", "prompt", "label");
-            
-            // This prunes the tree.
             this.MarkPunctuation("[", "]", "(", ")", Environment.NewLine);
             this.MarkPunctuation(end, begin);
             RegisterBracePair("(", ")");
             RegisterBracePair("[", "]");
-            
+            // This prunes the tree.
             this.MarkTransient(begin, end, v, endWhile, endFor);
-            this.Root = program;
+            
 
+            // this is flags for things like auto Ast creation but only works when every non transient node has an Ast
             //this.LanguageFlags = LanguageFlags.CreateAst | LanguageFlags.NewLineBeforeEOF;
+
+            //this was my attempt at fixing the super recursive depth of the parsed tree
+            //expr.Rule = identifier |
+            //    digit |
+            //    identifier + addOp + identifier |
+            //    identifier + mulOp + identifier |
+            //    digit + addOp + digit |
+            //    digit + mulOp + digit |
+            //    identifier + addOp + digit |
+            //    identifier + mulOp + digit |
+            //    digit + addOp + identifier |
+            //    digit + mulOp + identifier |
+            //    identifier + "[" + identifier + addOp + identifier + "]" |
+            //    identifier + "[" + identifier + mulOp + identifier + "]" |
+            //    identifier + "(" + identifier + addOp + identifier + ")" |
+            //    identifier + "(" + identifier + mulOp + identifier + ")" |
+            //    identifier + "[" + identifier + "]" |
+            //    identifier + "(" + identifier + ")" |
+            //    expr + "[" + expr + "]" + expr |
+            //    expr + "(" + expr + ")" + expr |
+            //    Empty;
         }
     }
 }
