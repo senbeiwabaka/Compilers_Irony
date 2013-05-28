@@ -6,7 +6,7 @@ var
 begin
 	let bound = 32
 	rem initialize array
-	for idx = 0 to (bound - 1)
+	for idx = 0 to bound - 1
 		let array[idx] = -1
 	endfor
 	let array[0] = 1
