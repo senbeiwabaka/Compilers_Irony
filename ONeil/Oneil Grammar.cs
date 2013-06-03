@@ -1,6 +1,5 @@
 ﻿using System;
 using Irony.Parsing;
-using Irony.Interpreter.Ast;
 
 namespace ONeil
 {
@@ -17,8 +16,10 @@ namespace ONeil
             var identifier = new IdentifierTerminal("identifier", IdOptions.IsNotKeyword);
             // Notifys the parser that "rem" is a comment
             var remComment = new CommentTerminal("comment", "rem", "\n", "\r");
+            var title = new CommentTerminal("titleComment", "title", "\n", "\r");
             // adding them to the list
             base.NonGrammarTerminals.Add(remComment);
+            base.NonGrammarTerminals.Add(title);
 
             //2. non-terminals
             var program = new NonTerminal("program");
@@ -42,42 +43,61 @@ namespace ONeil
             //var number = new NonTerminal("number");
             //var digitList = new NonTerminal("digList");
             // title and begin are used for easy statement
-            var title = new NonTerminal("title");
+            //var title = new NonTerminal("title");
             var begin = new NonTerminal("begin");
             var end = new NonTerminal("end");
             var v = new NonTerminal("var");
+
 
             var whileStmt = new NonTerminal("while");
             var endWhile = new NonTerminal("endwhile");
             var forStmt = new NonTerminal("for");
             var endFor = new NonTerminal("endfor");
             // To correctly do if statements
-            var ifStmt = new NonTerminal("if", typeof(IfNode));
+            var ifStmt = new NonTerminal("if");
+
+            var label = new NonTerminal("label");
+            var prompt = new NonTerminal("prompt");
+            var print = new NonTerminal("print");
+            var input = new NonTerminal("print");
+            var gotos = new NonTerminal("goto");
+            var let = new NonTerminal("let");
+
 
             //3. non-terminals rule
             // Title line that accepts string literals with their built in newline
-            title.Rule = ToTerm("title") + text + NewLine;
+            //title.Rule = ToTerm("title") + text + NewLine;
             begin.Rule = ToTerm("begin") + NewLine;
             end.Rule = ToTerm("end");
-            programLine.Rule = title + v + varDecList + begin + stmtList + end;
+
+            programLine.Rule = NewLine + v + varDecList + begin + stmtList + end;
             // VarDecList line that accepts their built in Empty element
             v.Rule = ToTerm("var") + NewLine;
             varDecList.Rule = MakeStarRule(varDecList, varDecl);
             //varDecTail.Rule = Empty | varDecl + varDecTail;
-            varDecl.Rule = ToTerm("int") + identifier + NewLine | ToTerm("list") + "[" + digit + "]" + identifier + NewLine |
+            varDecl.Rule = ToTerm("int") + identifier + NewLine |
+                ToTerm("list") + "[" + digit + "]" + identifier + NewLine |
                 ToTerm("table") + "[" + digit + "," + digit + "]" + identifier + NewLine;
+
+            label.Rule = ToTerm("label") + identifier;
+            prompt.Rule = ToTerm("prompt") + text;
+            print.Rule = ToTerm("print") + identifier |
+                ToTerm("print") + identifier + "[" + expr + "]";
+            input.Rule = ToTerm("input") + identifier |
+                ToTerm("input") + "[" + identifier + "]";
+            gotos.Rule = ToTerm("goto") + identifier;
+            let.Rule = "let" + identifier + "=" + expr |
+                "let" + identifier + "[" + expr + "]" + "=" + expr;
+
             // MakeStarRule is zero or more elements <-- takes care of recursion
             stmtList.Rule = MakeStarRule(stmtList, NewLine, stmt);
-            stmt.Rule = ToTerm("rem") + text |
-                ToTerm("label") + identifier |
-                "let" + identifier + "=" + expr |
-                "let" + identifier + "[" + expr + "]" + "=" + expr |
+            stmt.Rule = label |
+                let |
                 ifStmt |
-                "goto" + identifier |
-                "input" + identifier |
-                "input [" + identifier + "]" |
-                "print" + expr |
-                ToTerm("prompt") + text |
+                gotos |
+                input |
+                print |
+                prompt |
                 whileStmt |
                 forStmt |
                 Empty;
@@ -94,21 +114,21 @@ namespace ONeil
             relOp.Rule = ToTerm("<") | "==" | ">" | "<=" | ">=" | "!=";
             addOp.Rule = ToTerm("+") | "-";
             mulOp.Rule = ToTerm("*") | "/" | "%";
-            program.Rule = MakePlusRule(program, null, programLine);
+            program.Rule = MakeStarRule(program, programLine);
             this.Root = program;
 
             // This signifies that this language uses Newline as line enders
             this.UsesNewLine = true;
 
             // I think this is for syntax checker and highlighter
-            this.MarkReservedWords("rem", "var", "begin", "end", "endfor", "while", "endwhile", "prompt", "label");
+            this.MarkReservedWords("var", "begin", "end", "endfor", "while", "endwhile");
             this.MarkPunctuation("[", "]", "(", ")", Environment.NewLine);
-            this.MarkPunctuation(end, begin);
+            this.MarkPunctuation(end, begin, endWhile, endFor);
             RegisterBracePair("(", ")");
             RegisterBracePair("[", "]");
             // This prunes the tree.
-            this.MarkTransient(begin, end, v, endWhile, endFor);
-            
+            this.MarkTransient(begin, end, endWhile, endFor, stmt);
+
 
             // this is flags for things like auto Ast creation but only works when every non transient node has an Ast
             //this.LanguageFlags = LanguageFlags.CreateAst | LanguageFlags.NewLineBeforeEOF;
