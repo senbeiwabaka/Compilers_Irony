@@ -225,5 +225,37 @@ namespace ONeil
             csc.GenerateCode();
             txtCSharpCode.Lines = csc.CSCode;
         }
+
+        private void compileCCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var codeProvider = CodeDomProvider.CreateProvider("CSharp");
+
+            txtErrors.Text = string.Empty;
+
+            //generate exe not dll
+            var par = new CompilerParameters
+            {
+                GenerateExecutable = true,
+                OutputAssembly = "test.exe",
+                CompilerOptions = "/platform:x86"
+            };
+
+            var _results = codeProvider.CompileAssemblyFromSource(par, txtCSharpCode.Text);
+
+
+            if (_results.Errors.Count > 0)
+            {
+                foreach (CompilerError item in _results.Errors)
+                {
+                    txtErrors.Text += @"line number " + item.Line + @", error num" + item.ErrorNumber +
+                                     @" , " + item.ErrorText + Environment.NewLine + Environment.NewLine;
+                }
+            }
+            else
+            {
+                //Successful Compile
+                txtErrors.Text = @"Success!";
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generatorCCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.codeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +45,7 @@
             this.tbpParse = new System.Windows.Forms.TabPage();
             this.tbpAst = new System.Windows.Forms.TabPage();
             this.txtCSharpCode = new System.Windows.Forms.TextBox();
-            this.generatorCCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compileCCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tbpParse.SuspendLayout();
@@ -104,6 +105,13 @@
             this.createTreeToolStripMenuItem.Text = "Create Tree";
             this.createTreeToolStripMenuItem.Click += new System.EventHandler(this.createTreeToolStripMenuItem_Click);
             // 
+            // generatorCCodeToolStripMenuItem
+            // 
+            this.generatorCCodeToolStripMenuItem.Name = "generatorCCodeToolStripMenuItem";
+            this.generatorCCodeToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.generatorCCodeToolStripMenuItem.Text = "Generator C# Code";
+            this.generatorCCodeToolStripMenuItem.Click += new System.EventHandler(this.generatorCCodeToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -119,7 +127,8 @@
             // codeToolStripMenuItem
             // 
             this.codeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addClassToolStripMenuItem});
+            this.addClassToolStripMenuItem,
+            this.compileCCodeToolStripMenuItem});
             this.codeToolStripMenuItem.Name = "codeToolStripMenuItem";
             this.codeToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.codeToolStripMenuItem.Text = "Code";
@@ -127,7 +136,7 @@
             // addClassToolStripMenuItem
             // 
             this.addClassToolStripMenuItem.Name = "addClassToolStripMenuItem";
-            this.addClassToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.addClassToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.addClassToolStripMenuItem.Text = "Add Class";
             this.addClassToolStripMenuItem.Click += new System.EventHandler(this.addClassToolStripMenuItem_Click);
             // 
@@ -191,12 +200,12 @@
             this.txtCSharpCode.Size = new System.Drawing.Size(333, 326);
             this.txtCSharpCode.TabIndex = 7;
             // 
-            // generatorCCodeToolStripMenuItem
+            // compileCCodeToolStripMenuItem
             // 
-            this.generatorCCodeToolStripMenuItem.Name = "generatorCCodeToolStripMenuItem";
-            this.generatorCCodeToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.generatorCCodeToolStripMenuItem.Text = "Generator C# Code";
-            this.generatorCCodeToolStripMenuItem.Click += new System.EventHandler(this.generatorCCodeToolStripMenuItem_Click);
+            this.compileCCodeToolStripMenuItem.Name = "compileCCodeToolStripMenuItem";
+            this.compileCCodeToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.compileCCodeToolStripMenuItem.Text = "Compile C# Code";
+            this.compileCCodeToolStripMenuItem.Click += new System.EventHandler(this.compileCCodeToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -240,6 +249,7 @@
         private System.Windows.Forms.TabPage tbpAst;
         private System.Windows.Forms.TextBox txtCSharpCode;
         private System.Windows.Forms.ToolStripMenuItem generatorCCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compileCCodeToolStripMenuItem;
     }
 }
 
