@@ -1,4 +1,4 @@
-title "help" 
+title help 
 var
    int a
    int i
@@ -21,7 +21,7 @@ begin
    label calc
    let p = 0
    while (a > 0)
-      rem bit[p] = a % 2
+      let bit[p] = a % 2
       let p = p + 1
       let a = a / 2
    endwhile
