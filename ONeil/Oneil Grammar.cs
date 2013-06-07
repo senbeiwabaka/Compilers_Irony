@@ -82,12 +82,12 @@ namespace ONeil
             label.Rule = ToTerm("label") + identifier;
             prompt.Rule = ToTerm("prompt") + text;
             print.Rule = ToTerm("print") + identifier |
-                ToTerm("print") + identifier + "[" + expr + "]";
+                ToTerm("print") + identifier + "[" + term + "]";
             input.Rule = ToTerm("input") + identifier |
                 ToTerm("input") + "[" + identifier + "]";
             gotos.Rule = ToTerm("goto") + identifier;
-            let.Rule = "let" + identifier + "=" + expr |
-                "let" + identifier + "[" + expr + "]" + "=" + expr;
+            let.Rule = "let" + identifier + "=" + term |
+                "let" + identifier + "[" + term + "]" + "=" + term;
 
             // MakeStarRule is zero or more elements <-- takes care of recursion
             stmtList.Rule = MakeStarRule(stmtList, NewLine, stmt);
@@ -101,16 +101,20 @@ namespace ONeil
                 whileStmt |
                 forStmt |
                 Empty;
-            whileStmt.Rule = ToTerm("while") + "(" + expr + relOp + expr + ")" + NewLine + stmtList + endWhile;// + NewLine;
+            whileStmt.Rule = ToTerm("while") + "(" + term + relOp + term + ")" + NewLine + stmtList + endWhile;// + NewLine;
             endWhile.Rule = ToTerm("endwhile");
-            ifStmt.Rule = ToTerm("if") + "(" + expr + relOp + expr + ")" + "then" + stmt;
-            forStmt.Rule = ToTerm("for") + identifier + "=" + expr + "to" + expr + NewLine + stmtList + endFor;
+            ifStmt.Rule = ToTerm("if") + "(" + term + relOp + term + ")" + "then" + stmt;
+            forStmt.Rule = ToTerm("for") + identifier + "=" + term + "to" + term + NewLine + stmtList + endFor;
             endFor.Rule = ToTerm("endfor");
-            expr.Rule = term + exprTail;
-            exprTail.Rule = Empty | addOp + term + exprTail;
-            term.Rule = factor + termTail;
-            termTail.Rule = Empty | mulOp + factor + termTail;
-            factor.Rule = identifier | identifier + "[" + expr + "]" | digit | "(" + expr + ")";
+            //expr.Rule = MakeStarRule(expr, exprTail);
+            //exprTail.Rule = Empty | addOp + term + exprTail | term;
+            term.Rule = MakeStarRule(term, termTail);
+            termTail.Rule = Empty |
+                mulOp + factor + termTail |
+                addOp + term + termTail |
+                term |
+                factor;
+            factor.Rule = identifier | identifier + "[" + term + "]" | digit | "(" + term + ")";
             relOp.Rule = ToTerm("<") | "==" | ">" | "<=" | ">=" | "!=";
             addOp.Rule = ToTerm("+") | "-";
             mulOp.Rule = ToTerm("*") | "/" | "%";
@@ -122,12 +126,13 @@ namespace ONeil
 
             // I think this is for syntax checker and highlighter
             this.MarkReservedWords("var", "begin", "end", "endfor", "while", "endwhile");
-            this.MarkPunctuation("[", "]", "(", ")", Environment.NewLine);
+            //this.MarkPunctuation("[", "]", "(", ")", Environment.NewLine);
             this.MarkPunctuation(end, begin, endWhile, endFor);
             RegisterBracePair("(", ")");
             RegisterBracePair("[", "]");
+            
             // This prunes the tree.
-            this.MarkTransient(begin, end, endWhile, endFor, stmt);
+            this.MarkTransient(begin, end, endWhile, endFor, stmt, termTail);
 
 
             // this is flags for things like auto Ast creation but only works when every non transient node has an Ast
